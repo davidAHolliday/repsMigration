@@ -26,27 +26,27 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/studentid")
-    public ResponseEntity<Student> getStudentByIdNumber(@RequestBody StudentRequest studentRequest) throws Exception {
-        var message = studentService.requestStudentIdNumber(studentRequest.getStudent().getStudentIdNumber());
+    @GetMapping("/studentid/{studentId}")
+    public ResponseEntity<Student> getStudentByIdNumber(@PathVariable String studentId) throws Exception {
+        var message = studentService.requestStudentIdNumber(studentId);
 
         return ResponseEntity
                 .accepted()
                 .body(message);
     }
 
-    @GetMapping("/lastname")
-    public ResponseEntity<List<Student>> getStudentByLastName (@RequestBody StudentRequest studentRequest) throws Exception {
-        var message = studentService.requestStudentLastName(studentRequest);
+    @GetMapping("/lastname/{lastName}")
+    public ResponseEntity<List<Student>> getStudentByLastName (@PathVariable String lastName) throws Exception {
+        var message = studentService.requestStudentLastName(lastName);
 
         return ResponseEntity
                 .accepted()
                 .body(message);
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<Student> getStudentByEmail (@RequestBody StudentRequest studentRequest) throws Exception {
-        var message = studentService.requestStudentEmail(studentRequest);
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Student> getStudentByEmail (@PathVariable  String email) throws Exception {
+        var message = studentService.requestStudentEmail(email);
 
         return ResponseEntity
                 .accepted()

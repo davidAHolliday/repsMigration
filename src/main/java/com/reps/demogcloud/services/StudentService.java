@@ -37,8 +37,8 @@ public class StudentService {
         logger.debug(String.valueOf(findMe));
         return findMe;
     }
-    public List<Student> requestStudentLastName(StudentRequest studentRequest) throws Exception {
-        var findMe = studentRepository.findByLastName(studentRequest.getStudent().getLastName());
+    public List<Student> requestStudentLastName(String lastName) throws Exception {
+        var findMe = studentRepository.findByLastName(lastName);
 //        System.out.println(secretClient.getSecret("TWILIO-ACCOUNT-SID"));  Not working because it isn't even accessing it
         if (findMe.isEmpty()) {
             throw new Exception("No student with that Last Name exists");
@@ -47,8 +47,8 @@ public class StudentService {
         return findMe;
     }
 
-    public Student requestStudentEmail(StudentRequest studentRequest) throws Exception {
-        var findMe = studentRepository.findByStudentEmail(studentRequest.getStudent().getStudentEmail());
+    public Student requestStudentEmail(String email) throws Exception {
+        var findMe = studentRepository.findByStudentEmail(email);
 
         if (findMe == null) {
             throw new Exception("No student with that email exists");

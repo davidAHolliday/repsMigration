@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,7 +23,7 @@ public class InfractionController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<Infraction> findAllInfractions() {
+    public ResponseEntity<List<Infraction>> findAllInfractions() {
         var message = infractionService.findAllInfractions();
 
         return ResponseEntity
@@ -64,11 +65,11 @@ public class InfractionController {
                 .body(delete);
     }
 
-    @PutMapping("/infraction/edit")
-    public ResponseEntity<Infraction> editInfraction (@RequestBody Infraction infraction) {
-        var edit = infractionService.createNewInfraction(infraction);
-        return ResponseEntity
-                .accepted()
-                .body(edit);
-    }
+//    @PutMapping("/infraction/edit")
+//    public ResponseEntity<Infraction> editInfraction (@RequestBody Infraction infraction) {
+//        var edit = infractionService.createNewInfraction(infraction);
+//        return ResponseEntity
+//                .accepted()
+//                .body(edit);
+//    }
 }

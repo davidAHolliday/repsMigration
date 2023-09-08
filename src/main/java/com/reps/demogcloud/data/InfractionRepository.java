@@ -1,6 +1,6 @@
-package com.dms.reps.data;
+package com.reps.demogcloud.data;
 
-import com.dms.reps.model.infraction.Infraction;
+import com.reps.demogcloud.models.infraction.Infraction;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

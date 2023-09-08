@@ -20,6 +20,15 @@ public class InfractionController {
         this.infractionService = infractionService;
     }
 
+
+    @GetMapping("/all")
+    public ResponseEntity<Infraction> findAllInfractions() {
+        var message = infractionService.findAllInfractions();
+
+        return ResponseEntity
+                .accepted()
+                .body(message);
+    }
     @PostMapping("/createInfraction")
     public ResponseEntity<Infraction> createNewInfraction(@RequestBody Infraction infraction) {
         var message = infractionService.createNewInfraction(infraction);

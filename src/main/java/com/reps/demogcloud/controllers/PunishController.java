@@ -1,9 +1,11 @@
-package com.dms.reps.controller;
+package com.reps.demogcloud.controllers;
 
-import com.dms.reps.model.punishment.Punishment;
-import com.dms.reps.model.punishment.PunishmentRequest;
-import com.dms.reps.model.punishment.PunishmentResponse;
-import com.dms.reps.service.PunishmentService;
+
+import com.reps.demogcloud.models.ResourceNotFoundException;
+import com.reps.demogcloud.models.punishment.Punishment;
+import com.reps.demogcloud.models.punishment.PunishmentRequest;
+import com.reps.demogcloud.models.punishment.PunishmentResponse;
+import com.reps.demogcloud.services.PunishmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class PunishController {
     PunishmentService punishmentService;
 
     @GetMapping("/punishId")
-    public ResponseEntity<Punishment> getByPunishId(@RequestBody Punishment punishment) {
+    public ResponseEntity<Punishment> getByPunishId(@RequestBody Punishment punishment) throws ResourceNotFoundException {
         var message = punishmentService.findByPunishmentId(punishment);
 
         return ResponseEntity
@@ -30,7 +32,7 @@ public class PunishController {
     }
 
     @PostMapping("/punishId/close")
-    public ResponseEntity<PunishmentResponse> closePunishment(@RequestBody Punishment punishment) {
+    public ResponseEntity<PunishmentResponse> closePunishment(@RequestBody Punishment punishment) throws ResourceNotFoundException {
         var message = punishmentService.closePunishment(punishment);
 
         return ResponseEntity
@@ -48,7 +50,7 @@ public class PunishController {
     }
 
     @GetMapping("/punishStatus/{status}")
-    public ResponseEntity<List<Punishment>> getByStatus(@PathVariable String status) {
+    public ResponseEntity<List<Punishment>> getByStatus(@PathVariable String status) throws ResourceNotFoundException {
         var message = punishmentService.findByStatus(status);
 
         return ResponseEntity
@@ -57,7 +59,7 @@ public class PunishController {
     }
 
     @GetMapping("/student")
-    public ResponseEntity<List<Punishment>> getByStudent(@RequestBody PunishmentRequest punishmentRequest) {
+    public ResponseEntity<List<Punishment>> getByStudent(@RequestBody PunishmentRequest punishmentRequest) throws ResourceNotFoundException {
         var message = punishmentService.findByStudent(punishmentRequest);
 
         return ResponseEntity
@@ -75,7 +77,7 @@ public class PunishController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deletePunishment (@RequestBody Punishment punishment) {
+    public ResponseEntity<String> deletePunishment (@RequestBody Punishment punishment) throws ResourceNotFoundException {
         var delete = punishmentService.deletePunishment(punishment);
         return ResponseEntity
                 .accepted()

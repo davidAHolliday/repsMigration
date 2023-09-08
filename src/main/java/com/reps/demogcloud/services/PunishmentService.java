@@ -1,44 +1,47 @@
-package com.dms.reps.service;
+package com.reps.demogcloud.services;
 
-import com.dms.reps.data.InfractionRepository;
-import com.dms.reps.data.PunishRepository;
-import com.dms.reps.data.StudentRepository;
-import com.dms.reps.model.punishment.Punishment;
-import com.dms.reps.model.punishment.PunishmentRequest;
-import com.dms.reps.model.punishment.PunishmentResponse;
-import com.dms.reps.model.student.Student;
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
+
+import com.reps.demogcloud.data.InfractionRepository;
+import com.reps.demogcloud.data.PunishRepository;
+import com.reps.demogcloud.data.StudentRepository;
+import com.reps.demogcloud.models.ResourceNotFoundException;
+//import com.twilio.Twilio;
+//import com.twilio.rest.api.v2010.account.Message;
+//import com.twilio.type.PhoneNumber;
+import com.reps.demogcloud.models.punishment.Punishment;
+import com.reps.demogcloud.models.punishment.PunishmentRequest;
+import com.reps.demogcloud.models.punishment.PunishmentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class PunishmentService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final StudentRepository studentRepository;
     private final InfractionRepository infractionRepository;
     private final PunishRepository punishRepository;
-    private final EmailService emailService;
+//    private final EmailService emailService;
 
     public static final String ACCOUNT_SID = "AC31fd459d82bd5d3ff135db0968b011d7";
     public static final String AUTH_TOKEN = "79a5f09dbb2b7d6d367c71715899a10e";
 
-    public List<Punishment> findByStudent(PunishmentRequest punishmentRequest) {
+    public PunishmentService(StudentRepository studentRepository, InfractionRepository infractionRepository, PunishRepository punishRepository) {
+        this.studentRepository = studentRepository;
+        this.infractionRepository = infractionRepository;
+        this.punishRepository = punishRepository;
+    }
+
+    public List<Punishment> findByStudent(PunishmentRequest punishmentRequest) throws ResourceNotFoundException {
         var findMe = punishRepository.findByStudent(punishmentRequest.getStudent());
 
         if (findMe.isEmpty()) {
@@ -52,7 +55,7 @@ public class PunishmentService {
         return punishRepository.findAll();
     }
 
-    public List<Punishment> findByInfraction(PunishmentRequest punishmentRequest) {
+    public List<Punishment> findByInfraction(PunishmentRequest punishmentRequest) throws ResourceNotFoundException {
         var findMe = punishRepository.findByInfraction(punishmentRequest.getInfraction());
 
         if (findMe.isEmpty()) {
@@ -62,7 +65,7 @@ public class PunishmentService {
         return findMe;
     }
 
-    public List<Punishment> findByStatus(String status) {
+    public List<Punishment> findByStatus(String status) throws ResourceNotFoundException {
         var findMe = punishRepository.findByStatus(status);
 
         if (findMe.isEmpty()) {
@@ -72,7 +75,7 @@ public class PunishmentService {
         return findMe;
     }
 
-    public Punishment findByPunishmentId(Punishment punishment) {
+    public Punishment findByPunishmentId(Punishment punishment) throws ResourceNotFoundException {
         var findMe = punishRepository.findByPunishmentId(punishment.getPunishmentId());
 
         if (findMe == null) {
@@ -83,7 +86,7 @@ public class PunishmentService {
     }
 
     public PunishmentResponse createNewPunish(PunishmentRequest punishmentRequest) {
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+//        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         System.out.println("REP CREATED");
@@ -107,10 +110,10 @@ public class PunishmentService {
         punishmentResponse.setSubject("REP " + punishment.getPunishmentId() + " for " + punishment.getStudent().getFirstName() + " " + punishment.getStudent().getLastName());
         punishmentResponse.setToEmail(punishment.getStudent().getParentEmail());
 
-        emailService.sendEmail(punishmentResponse.getToEmail(), punishmentResponse.getSubject(), punishmentResponse.getMessage());
+//        emailService.sendEmail(punishmentResponse.getToEmail(), punishmentResponse.getSubject(), punishmentResponse.getMessage());
 
-        Message.creator(new PhoneNumber(punishmentResponse.getPunishment().getStudent().getParentPhoneNumber()),
-                new PhoneNumber("+18437900073"), punishmentResponse.getMessage()).create();
+//        Message.creator(new PhoneNumber(punishmentResponse.getPunishment().getStudent().getParentPhoneNumber()),
+//                new PhoneNumber("+18437900073"), punishmentResponse.getMessage()).create();
 
         return punishmentResponse;
         }
@@ -123,7 +126,7 @@ public class PunishmentService {
     }
 
     public PunishmentResponse closePunishment ( Punishment punishment ) throws  ResourceNotFoundException {
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+//        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
         var findMe = punishRepository.findByPunishmentId(punishment.getPunishmentId());
 
@@ -138,10 +141,10 @@ public class PunishmentService {
             punishmentResponse.setSubject("REP " + findMe.getPunishmentId() + " for " + findMe.getStudent().getFirstName() + " " + findMe.getStudent().getLastName() + " CLOSED");
             punishmentResponse.setToEmail(punishment.getStudent().getParentEmail());
 
-            emailService.sendEmail(punishmentResponse.getToEmail(), punishmentResponse.getSubject(), punishmentResponse.getMessage());
+//            emailService.sendEmail(punishmentResponse.getToEmail(), punishmentResponse.getSubject(), punishmentResponse.getMessage());
 
-            Message.creator(new PhoneNumber(punishmentResponse.getPunishment().getStudent().getParentPhoneNumber()),
-                    new PhoneNumber("+18437900073"), punishmentResponse.getMessage()).create();
+//            Message.creator(new PhoneNumber(punishmentResponse.getPunishment().getStudent().getParentPhoneNumber()),
+//                    new PhoneNumber("+18437900073"), punishmentResponse.getMessage()).create();
 
 //        int closedPunishments = punishment.getClosedInfraction();
 //        punishment.setClosedInfraction(closedPunishments + 1);

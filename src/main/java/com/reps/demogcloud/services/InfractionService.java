@@ -1,29 +1,31 @@
-package com.dms.reps.service;
+package com.reps.demogcloud.services;
 
-import com.dms.reps.data.InfractionRepository;
-import com.dms.reps.model.infraction.Infraction;
+import com.reps.demogcloud.data.InfractionRepository;
+import com.reps.demogcloud.models.ResourceNotFoundException;
+import com.reps.demogcloud.models.infraction.Infraction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class InfractionService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final InfractionRepository repository;
     private final MongoTemplate mongoTemplate;
 
-    public Optional<Infraction> findInfractionByInfractionName (String infractionName) {
+    public InfractionService(InfractionRepository repository, MongoTemplate mongoTemplate) {
+        this.repository = repository;
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    public Optional<Infraction> findInfractionByInfractionName (String infractionName) throws ResourceNotFoundException {
         var findMe = repository.findByInfractionName(infractionName);
 
         if (findMe.isEmpty()) {
@@ -33,7 +35,7 @@ public class InfractionService {
         return findMe;
     }
 
-    public Infraction findByInfractionId (String infractionId) {
+    public Infraction findByInfractionId (String infractionId) throws ResourceNotFoundException {
 //        Query query = new Query();
 //        query.addCriteria(
 //                new Criteria(
@@ -62,5 +64,9 @@ public class InfractionService {
         catch (Exception e) {
             throw new ResourceNotFoundException("That infraction does not exist");
         } return "${infraction} has been deleted";
+    }
+
+    public List<Infraction> findAllInfractions() {
+        return repository.findAll();
     }
 }

@@ -58,14 +58,14 @@ public class PunishController {
                 .body(message);
     }
 
-    @GetMapping("/student")
-    public ResponseEntity<List<Punishment>> getByStudent(@RequestBody PunishmentRequest punishmentRequest) throws ResourceNotFoundException {
-        var message = punishmentService.findByStudent(punishmentRequest);
-
-        return ResponseEntity
-                .accepted()
-                .body(message);
-    }
+//    @GetMapping("/student")
+//    public ResponseEntity<List<Punishment>> getByStudent(@RequestBody PunishmentRequest punishmentRequest) throws ResourceNotFoundException {
+//        var message = punishmentService.findByStudent(punishmentRequest);
+//
+//        return ResponseEntity
+//                .accepted()
+//                .body(message);
+//    }
 
     @PostMapping("/startPunish")
     public ResponseEntity<PunishmentResponse> createNewPunish(@RequestBody PunishmentRequest punishmentRequest) {
